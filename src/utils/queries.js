@@ -37,3 +37,16 @@ export const CREATE_CAR_MUTATION = gql`
     }
   }
 `;
+
+export const NEW_CARS_SUBSCRIPTION = gql`
+  subscription {
+    newCar {
+      id
+      title
+      vin
+      make
+      model
+      year
+    }
+  }
+`;
