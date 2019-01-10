@@ -1,31 +1,6 @@
 import React, { Component } from 'react';
 import { Mutation } from 'react-apollo';
-import gql from 'graphql-tag';
-
-const CREATE_CAR_MUTATION = gql`
-  mutation CreateCarMutation(
-    $title: String!,
-    $vin: String,
-    $make: String,
-    $model: String,
-    $year: Int,
-  ) {
-    createCar(
-      title: $title,
-      vin: $vin,
-      make: $make,
-      model: $model,
-      year: $year,
-    ) {
-      id
-      title
-      vin
-      make
-      model
-      year
-    }
-  }
-`;
+import { CREATE_CAR_MUTATION } from '../../utils/queries';
 
 class CreateCar extends Component {
   state = {
@@ -97,7 +72,11 @@ class CreateCar extends Component {
             placeholder="year"
           />
         </div>
-        <Mutation mutation={CREATE_CAR_MUTATION} variables={{ title, vin, make, model, year }}>
+        <Mutation
+          mutation={CREATE_CAR_MUTATION}
+          variables={{ title, vin, make, model, year }}
+          onCompleted={() => this.props.history.push('/')}
+        >
           {createCarMutation => <button onClick={createCarMutation}>Create Car</button>}
         </Mutation>
       </div>

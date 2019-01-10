@@ -1,26 +1,13 @@
 import React, { Component } from 'react';
 import { Query } from 'react-apollo';
-import gql from 'graphql-tag';
 import Car from './Car';
-
-const QUERY = gql`
-  {
-    cars {
-      id
-      title
-      vin
-      make
-      model
-      year
-    }
-  }
-`
+import { CAR_QUERY } from '../../utils/queries';
 
 class CarList extends Component {
   render() {
     return(
-      <Query query={QUERY}>
-        {({ loading, error, data }) => {
+      <Query query={CAR_QUERY}>
+        {({ loading, error, data, subscribeToMore }) => {
           if (loading) {
             return <div>Fetching...</div>
           }
