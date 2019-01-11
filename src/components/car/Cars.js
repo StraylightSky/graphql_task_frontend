@@ -5,7 +5,7 @@ import { Button } from '@material-ui/core';
 import classNames from 'classnames';
 import { withStyles } from '@material-ui/core/styles';
 import styles from './styles';
-import ReusableTable from '../Table';
+import ReusableTable from '../ReusableTable';
 import {
   NEW_CARS_SUBSCRIPTION,
   DELETE_CAR_MUTATION,
