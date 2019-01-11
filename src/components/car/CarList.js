@@ -1,9 +1,18 @@
 import React, { Component } from 'react';
-import { Query } from 'react-apollo';
-import Car from './Car';
+import { Mutation, Query } from 'react-apollo';
+import { Link } from 'react-router-dom';
 import {
-  CAR_QUERY,
-  NEW_CARS_SUBSCRIPTION
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+  Paper,
+} from '@material-ui/core';
+import {
+  CARS_QUERY,
+  DELETE_CAR_MUTATION,
+  NEW_CARS_SUBSCRIPTION,
 } from '../../utils/queries';
 
 class CarList extends Component {
@@ -27,7 +36,7 @@ class CarList extends Component {
 
   render() {
     return(
-      <Query query={CAR_QUERY}>
+      <Query query={CARS_QUERY}>
         {({ loading, error, data, subscribeToMore }) => {
           if (loading) {
             return <div>Fetching...</div>
@@ -41,9 +50,49 @@ class CarList extends Component {
           const cars = data.cars;
 
           return(
-            <div>
-              {cars.map(car => <Car key={car.id} car={car} />)}
-            </div>
+            <Paper>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Title</TableCell>
+                    <TableCell>VIN</TableCell>
+                    <TableCell>Make</TableCell>
+                    <TableCell>Model</TableCell>
+                    <TableCell>Year</TableCell>
+                    <TableCell>Actions</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {cars.map(car => {
+                    const { id, title, vin, make, model, year } = car;
+                    return(
+                      <TableRow key={id}>
+                        <TableCell component="th" scope="row">
+                          {title}
+                        </TableCell>
+                        <TableCell>{vin}</TableCell>
+                        <TableCell>{make}</TableCell>
+                        <TableCell>{model}</TableCell>
+                        <TableCell>{year}</TableCell>
+                        <TableCell>
+                          <Link to={`/edit/${id}`}>
+                            <button>Edit</button>
+                          </Link>
+                          <Mutation
+                            mutation={DELETE_CAR_MUTATION}
+                            variables={{ id }}
+                          >
+                            {deleteCarMutation => <button onClick={deleteCarMutation}>
+                              Delete Car
+                            </button>}
+                          </Mutation>
+                        </TableCell>
+                      </TableRow>
+                    )
+                  })}
+                </TableBody>
+              </Table>
+            </Paper>
           )
         }}
       </Query>

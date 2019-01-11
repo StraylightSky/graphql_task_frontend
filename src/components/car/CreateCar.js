@@ -3,12 +3,15 @@ import { Mutation } from 'react-apollo';
 import { CREATE_CAR_MUTATION } from '../../utils/queries';
 
 class CreateCar extends Component {
-  state = {
-    title: '',
-    vin: '',
-    make: '',
-    model: '',
-    year: 0,
+  componentWillMount() {
+    const year = new Date().getFullYear();
+    this.setState({
+      title: '',
+      vin: '',
+      make: '',
+      model: '',
+      year,
+    });
   }
 
   onTitleChangeHandler = (ev) => this.updateCarProperty('title', ev);
