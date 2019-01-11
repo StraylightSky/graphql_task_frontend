@@ -5,18 +5,20 @@ import {
   TextField,
   Typography,
 } from '@material-ui/core';
-import { CREATE_CAR_MUTATION } from '../../utils/queries';
+import { UPDATE_CAR_MUTATION } from '../../utils/queries';
 
-class CreateCar extends Component {
-  componentWillMount() {
-    const year = new Date().getFullYear();
-    this.setState({
-      title: '',
-      vin: '',
-      make: '',
-      model: '',
+class EditCarForm extends Component {
+  constructor(props) {
+    super(props);
+    const { id, title, vin, make, model, year } = props.car;
+    this.state = {
+      id,
+      title,
+      vin,
+      make,
+      model,
       year,
-    });
+    }
   }
 
   onTitleChangeHandler = (ev) => this.updateCarProperty(ev);
@@ -35,12 +37,12 @@ class CreateCar extends Component {
   }
 
   render() {
-    const { title, vin, make, model, year } = this.state;
+    const { id, title, vin, make, model, year } = this.state;
 
     return(
       <div>
-        <Typography variant="h4" gutterBottom>
-          Create New Car
+        <Typography variant="h4">
+          Editing Car
         </Typography>
         <div className="flex flex-column mt3">
           <TextField
@@ -86,26 +88,25 @@ class CreateCar extends Component {
           />
         </div>
         <Mutation
-          mutation={CREATE_CAR_MUTATION}
-          variables={{ title, vin, make, model, year }}
-          onCompleted={() => this.props.history.push('/')}
+          mutation={UPDATE_CAR_MUTATION}
+          variables={{ id, title, vin, make, model, year }}
         >
-          {createCarMutation => {
+          {updateCarMutation => {
             return(
               <Button
                 variant="contained"
                 color="primary"
                 size="small"
-                onClick={createCarMutation}
+                onClick={updateCarMutation}
               >
-                Create
+                Update
               </Button>
             );
           }}
         </Mutation>
       </div>
-    );
+    )
   }
 }
 
-export default CreateCar;
+export default EditCarForm;

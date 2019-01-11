@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { Mutation, Query } from 'react-apollo';
 import { Link } from 'react-router-dom';
 import {
+  Button,
+  CircularProgress,
   Table,
   TableBody,
   TableCell,
@@ -39,7 +41,7 @@ class CarList extends Component {
       <Query query={CARS_QUERY}>
         {({ loading, error, data, subscribeToMore }) => {
           if (loading) {
-            return <div>Fetching...</div>
+            return <CircularProgress />
           }
           if (error) {
             return <div>Error fetching data</div>
@@ -76,15 +78,30 @@ class CarList extends Component {
                         <TableCell>{year}</TableCell>
                         <TableCell>
                           <Link to={`/edit/${id}`}>
-                            <button>Edit</button>
+                            <Button
+                              variant="contained"
+                              color="primary"
+                              size="small"
+                            >
+                              Edit
+                            </Button>
                           </Link>
                           <Mutation
                             mutation={DELETE_CAR_MUTATION}
                             variables={{ id }}
                           >
-                            {deleteCarMutation => <button onClick={deleteCarMutation}>
-                              Delete Car
-                            </button>}
+                            {deleteCarMutation => {
+                              return(
+                                <Button
+                                  variant="contained"
+                                  color="secondary"
+                                  size="small"
+                                  onClick={deleteCarMutation}
+                                >
+                                  Delete
+                                </Button>
+                              )
+                            }}
                           </Mutation>
                         </TableCell>
                       </TableRow>

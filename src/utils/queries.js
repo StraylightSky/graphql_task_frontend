@@ -53,6 +53,7 @@ export const CREATE_CAR_MUTATION = gql`
 
 export const UPDATE_CAR_MUTATION = gql`
   mutation UpdateCarMutation(
+    $id: ID!,
     $title: String!,
     $vin: String,
     $make: String,
@@ -60,12 +61,13 @@ export const UPDATE_CAR_MUTATION = gql`
     $year: Int,
   ) {
     updateCar(
+      id: $id,
       title: $title,
       vin: $vin,
       make: $make,
       model: $model,
       year: $year,
-    ) {
+    ), {
       id
       title
       vin
