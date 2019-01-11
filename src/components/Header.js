@@ -1,24 +1,47 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { withRouter } from 'react-router';
+import {
+  AppBar,
+  Button,
+  Toolbar,
+  Typography,
+} from '@material-ui/core';
+import { withStyles } from '@material-ui/core/styles';
+
+const styles = {
+  grow: {
+    flexGrow: 1,
+  },
+  unvisited: {
+    color: '#FF0000',
+  },
+  white: {
+    color: '#FFFFFF',
+  }
+};
 
 class Header extends Component {
   render() {
+    const { classes } = this.props;
     return(
-      <div className="flex pa1 justify-between nowrap blue">
-        <div className="flex flex-fixed black">
-          <div className="fw7 mr1">Toad's Garage</div>
-          <Link to="/" className="ml1 no-underline white">
-            Home
-          </Link>
-          <div className="ml1">|</div>
-          <Link to="/create" className="ml1 no-underline white">
-            Create Car
-          </Link>
-        </div>
+      <div className={classes.grow}>
+        <AppBar position="static">
+          <Toolbar>
+            <Typography variant="h6" className={`${classes.grow} ${classes.white}`}>
+              Toad's Garage
+            </Typography>
+            <Link to="/" className={classes.unvisited}>
+              <Button className={classes.white}>Home</Button>
+            </Link>
+            <Link to="/create" className={classes.unvisited}>
+              <Button className={classes.white}>Create Car</Button>
+            </Link>
+          </Toolbar>
+        </AppBar>
       </div>
     );
   }
 }
 
-export default withRouter(Header);
+export default withStyles(styles)(withRouter(Header));
