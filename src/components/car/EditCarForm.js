@@ -1,16 +1,18 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import { Mutation } from 'react-apollo';
 import {
   Button,
   TextField,
   Typography,
 } from '@material-ui/core';
+import { withStyles } from '@material-ui/core/styles';
+import styles from './styles';
 import { UPDATE_CAR_MUTATION } from '../../utils/queries';
 
 class EditCarForm extends Component {
-  constructor(props) {
-    super(props);
-    const { id, title, vin, make, model, year } = props.car;
+  componentWillMount() {
+    const { id, title, vin, make, model, year } = this.props.car;
     this.state = {
       id,
       title,
@@ -38,6 +40,7 @@ class EditCarForm extends Component {
 
   render() {
     const { id, title, vin, make, model, year } = this.state;
+    const { classes } = this.props;
 
     return(
       <div>
@@ -96,17 +99,26 @@ class EditCarForm extends Component {
               <Button
                 variant="contained"
                 color="primary"
-                size="small"
+                size="medium"
                 onClick={updateCarMutation}
+                className={classes.mrgn5}
               >
                 Update
               </Button>
             );
           }}
         </Mutation>
+        <Link to="/">
+          <Button
+            variant="contained"
+            color="default"
+            size="medium"
+            className={classes.mrgn5}
+          >Cancel</Button>
+        </Link>
       </div>
     )
   }
 }
 
-export default EditCarForm;
+export default withStyles(styles)(EditCarForm);

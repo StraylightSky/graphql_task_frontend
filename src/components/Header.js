@@ -34,9 +34,6 @@ class Header extends Component {
             <Link to="/" className={classes.unvisited}>
               <Button className={classes.white}>Home</Button>
             </Link>
-            <Link to="/create" className={classes.unvisited}>
-              <Button className={classes.white}>Create Car</Button>
-            </Link>
           </Toolbar>
         </AppBar>
       </div>

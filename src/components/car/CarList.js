@@ -1,120 +1,48 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { Mutation, Query } from 'react-apollo';
-import classNames from 'classnames';
+import { Query } from 'react-apollo';
 import {
   Button,
   CircularProgress,
 } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
-import ReusableTable from '../Table';
-import {
-  CARS_QUERY,
-  DELETE_CAR_MUTATION,
-  NEW_CARS_SUBSCRIPTION,
-} from '../../utils/queries';
-
-const styles = {
-  mrgn5: {
-    margin: '5px',
-  },
-};
+import Cars from './Cars';
+import styles from './styles';
+import { CARS_QUERY } from '../../utils/queries';
 
 class CarList extends Component {
-  _subscribeToNewCars = subscribeToMore => {
-    subscribeToMore({
-      document: NEW_CARS_SUBSCRIPTION,
-      updateQuery: (prev, { subscriptionData }) => {
-        if (!subscriptionData) {
-          return prev;
-        }
-
-        const newCar = subscriptionData.data.newCar;
-
-        return Object.assign({}, prev, {
-          cars: [...prev.cars, newCar],
-          __typename: prev.cars.__typename,
-        })
-      }
-    });
-  }
-
   render() {
-    const { classes, className } = this.props;
-    const tableHeader = [
-      { name: 'Title' },
-      { name: 'VIN' },
-      { name: 'Make' },
-      { name: 'Model' },
-      { name: 'Year' },
-      { name: 'Actions' },
-    ];
+    const { classes } = this.props;
 
     return(
-      <Query query={CARS_QUERY}>
-        {({ loading, error, data, subscribeToMore }) => {
-          if (loading) {
-            return <CircularProgress />
-          }
-          if (error) {
-            return <div>Error fetching data</div>
-          }
-
-          this._subscribeToNewCars(subscribeToMore);
-
-          const cars = data.cars.map((car) => {
-            const { id, title, vin, make, model, year } = car;
-            return {
-              cells: [
-                { data: title },
-                { data: vin },
-                { data: make },
-                { data: model },
-                { data: year },
-                { data: (
-                    <div>
-                      <Link to={`/edit/${id}`}>
-                        <Button
-                          variant="contained"
-                          color="primary"
-                          size="small"
-                          className={classNames(classes.mrgn5, className)}
-                        >
-                          Edit
-                        </Button>
-                      </Link>
-                      <Mutation
-                        mutation={DELETE_CAR_MUTATION}
-                        variables={{ id }}
-                      >
-                        {deleteCarMutation => {
-                          return(
-                            <Button
-                              variant="contained"
-                              color="secondary"
-                              size="small"
-                              onClick={deleteCarMutation}
-                            >
-                              Delete
-                            </Button>
-                          );
-                        }}
-                      </Mutation>
-                    </div>
-                  )
-                },
-              ],
+      <div>
+        <Link to="/create">
+          <Button
+            variant="contained"
+            color="primary"
+            size="medium"
+            className={`${classes.mrgn5} ${classes.pullRight}`}
+          >
+            Add Car
+          </Button>
+        </Link>
+        <Query query={CARS_QUERY}>
+          {({ loading, error, data, subscribeToMore }) => {
+            if (loading) {
+              return <CircularProgress />
             }
-          })
+            if (error) {
+              return <div>Error fetching data</div>
+            }
 
-          return(
-            <ReusableTable
-              headers={tableHeader}
-              rows={cars}
-            />
-          )
-        }}
-      </Query>
+            const cars = data.cars;
+
+            return(
+              <Cars cars={cars} subscription={subscribeToMore} />
+            )
+          }}
+        </Query>
+      </div>
     )
   }
 }

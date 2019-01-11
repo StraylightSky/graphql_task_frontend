@@ -1,10 +1,13 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import { Mutation } from 'react-apollo';
 import {
   Button,
   TextField,
   Typography,
 } from '@material-ui/core';
+import { withStyles } from '@material-ui/core/styles';
+import styles from './styles';
 import { CREATE_CAR_MUTATION } from '../../utils/queries';
 
 class CreateCar extends Component {
@@ -36,6 +39,7 @@ class CreateCar extends Component {
 
   render() {
     const { title, vin, make, model, year } = this.state;
+    const { classes } = this.props;
 
     return(
       <div>
@@ -95,17 +99,28 @@ class CreateCar extends Component {
               <Button
                 variant="contained"
                 color="primary"
-                size="small"
+                size="medium"
                 onClick={createCarMutation}
+                className={classes.mrgn5}
               >
                 Create
               </Button>
             );
           }}
         </Mutation>
+        <Link to="/">
+          <Button
+            variant="contained"
+            color="default"
+            size="medium"
+            className={classes.mrgn5}
+          >
+            Cancel
+          </Button>
+        </Link>
       </div>
     );
   }
 }
 
-export default CreateCar;
+export default withStyles(styles)(CreateCar);
