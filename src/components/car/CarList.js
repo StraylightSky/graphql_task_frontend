@@ -1,21 +1,24 @@
 import React, { Component } from 'react';
-import { Mutation, Query } from 'react-apollo';
 import { Link } from 'react-router-dom';
+import { Mutation, Query } from 'react-apollo';
+import classNames from 'classnames';
 import {
   Button,
   CircularProgress,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
-  Paper,
 } from '@material-ui/core';
+import { withStyles } from '@material-ui/core/styles';
+import ReusableTable from '../Table';
 import {
   CARS_QUERY,
   DELETE_CAR_MUTATION,
   NEW_CARS_SUBSCRIPTION,
 } from '../../utils/queries';
+
+const styles = {
+  mrgn5: {
+    margin: '5px',
+  },
+};
 
 class CarList extends Component {
   _subscribeToNewCars = subscribeToMore => {
@@ -37,6 +40,16 @@ class CarList extends Component {
   }
 
   render() {
+    const { classes, className } = this.props;
+    const tableHeader = [
+      { name: 'Title' },
+      { name: 'VIN' },
+      { name: 'Make' },
+      { name: 'Model' },
+      { name: 'Year' },
+      { name: 'Actions' },
+    ];
+
     return(
       <Query query={CARS_QUERY}>
         {({ loading, error, data, subscribeToMore }) => {
@@ -49,67 +62,56 @@ class CarList extends Component {
 
           this._subscribeToNewCars(subscribeToMore);
 
-          const cars = data.cars;
-
-          return(
-            <Paper>
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Title</TableCell>
-                    <TableCell>VIN</TableCell>
-                    <TableCell>Make</TableCell>
-                    <TableCell>Model</TableCell>
-                    <TableCell>Year</TableCell>
-                    <TableCell>Actions</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {cars.map(car => {
-                    const { id, title, vin, make, model, year } = car;
-                    return(
-                      <TableRow key={id}>
-                        <TableCell component="th" scope="row">
-                          {title}
-                        </TableCell>
-                        <TableCell>{vin}</TableCell>
-                        <TableCell>{make}</TableCell>
-                        <TableCell>{model}</TableCell>
-                        <TableCell>{year}</TableCell>
-                        <TableCell>
-                          <Link to={`/edit/${id}`}>
+          const cars = data.cars.map((car) => {
+            const { id, title, vin, make, model, year } = car;
+            return {
+              cells: [
+                { data: title },
+                { data: vin },
+                { data: make },
+                { data: model },
+                { data: year },
+                { data: (
+                    <div>
+                      <Link to={`/edit/${id}`}>
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          size="small"
+                          className={classNames(classes.mrgn5, className)}
+                        >
+                          Edit
+                        </Button>
+                      </Link>
+                      <Mutation
+                        mutation={DELETE_CAR_MUTATION}
+                        variables={{ id }}
+                      >
+                        {deleteCarMutation => {
+                          return(
                             <Button
                               variant="contained"
-                              color="primary"
+                              color="secondary"
                               size="small"
+                              onClick={deleteCarMutation}
                             >
-                              Edit
+                              Delete
                             </Button>
-                          </Link>
-                          <Mutation
-                            mutation={DELETE_CAR_MUTATION}
-                            variables={{ id }}
-                          >
-                            {deleteCarMutation => {
-                              return(
-                                <Button
-                                  variant="contained"
-                                  color="secondary"
-                                  size="small"
-                                  onClick={deleteCarMutation}
-                                >
-                                  Delete
-                                </Button>
-                              )
-                            }}
-                          </Mutation>
-                        </TableCell>
-                      </TableRow>
-                    )
-                  })}
-                </TableBody>
-              </Table>
-            </Paper>
+                          );
+                        }}
+                      </Mutation>
+                    </div>
+                  )
+                },
+              ],
+            }
+          })
+
+          return(
+            <ReusableTable
+              headers={tableHeader}
+              rows={cars}
+            />
           )
         }}
       </Query>
@@ -117,4 +119,4 @@ class CarList extends Component {
   }
 }
 
-export default CarList;
+export default withStyles(styles)(CarList);
