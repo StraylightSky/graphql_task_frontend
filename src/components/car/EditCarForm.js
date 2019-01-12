@@ -11,7 +11,8 @@ import styles from './styles';
 import { UPDATE_CAR_MUTATION } from '../../utils/queries';
 
 class EditCarForm extends Component {
-  componentWillMount() {
+  constructor(props) {
+    super(props);
     const { id, title, vin, make, model, year } = this.props.car;
     this.state = {
       id,
