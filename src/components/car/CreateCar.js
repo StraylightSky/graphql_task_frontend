@@ -9,6 +9,7 @@ import {
 import { withStyles } from '@material-ui/core/styles';
 import styles from './styles';
 import { CREATE_CAR_MUTATION } from '../../utils/queries';
+import validateVin from '../../utils/vinValidator';
 
 class CreateCar extends Component {
   componentWillMount() {
@@ -40,7 +41,8 @@ class CreateCar extends Component {
   render() {
     const { title, vin, make, model, year } = this.state;
     const { classes } = this.props;
-    const isEnabled = title.length > 0;
+    const isDisabled = (title.length > 0 && vin.length === 0) ||
+      (title.length > 0 && validateVin(vin));
 
     return(
       <div>
@@ -103,7 +105,7 @@ class CreateCar extends Component {
                 size="medium"
                 onClick={createCarMutation}
                 className={classes.mrgn5}
-                disabled={!isEnabled}
+                disabled={!isDisabled}
               >
                 Create
               </Button>

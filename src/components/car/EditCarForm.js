@@ -9,6 +9,7 @@ import {
 import { withStyles } from '@material-ui/core/styles';
 import styles from './styles';
 import { UPDATE_CAR_MUTATION } from '../../utils/queries';
+import validateVin from '../../utils/vinValidator';
 
 class EditCarForm extends Component {
   constructor(props) {
@@ -42,6 +43,8 @@ class EditCarForm extends Component {
   render() {
     const { id, title, vin, make, model, year } = this.state;
     const { classes } = this.props;
+    const isDisabled = (title.length > 0 && vin.length === 0) ||
+      (title.length > 0 && validateVin(vin));
 
     return(
       <div>
@@ -103,6 +106,7 @@ class EditCarForm extends Component {
                 size="medium"
                 onClick={updateCarMutation}
                 className={classes.mrgn5}
+                disabled={!isDisabled}
               >
                 Update
               </Button>
