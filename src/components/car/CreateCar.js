@@ -40,6 +40,7 @@ class CreateCar extends Component {
   render() {
     const { title, vin, make, model, year } = this.state;
     const { classes } = this.props;
+    const isEnabled = title.length > 0;
 
     return(
       <div>
@@ -102,6 +103,7 @@ class CreateCar extends Component {
                 size="medium"
                 onClick={createCarMutation}
                 className={classes.mrgn5}
+                disabled={!isEnabled}
               >
                 Create
               </Button>
