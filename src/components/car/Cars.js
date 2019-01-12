@@ -1,11 +1,18 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { Mutation } from 'react-apollo';
-import { Button } from '@material-ui/core';
+import {
+  Button,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+} from '@material-ui/core';
 import classNames from 'classnames';
 import { withStyles } from '@material-ui/core/styles';
 import styles from './styles';
-import ReusableTable from '../ReusableTable';
 import {
   NEW_CARS_SUBSCRIPTION,
   DELETE_CAR_MUTATION,
@@ -38,7 +45,7 @@ class Cars extends Component {
   render() {
     let { cars } = this.props;
     const { classes, className } = this.props;
-    const tableHeader = [
+    const tableHeaders = [
       { name: 'Title' },
       { name: 'VIN' },
       { name: 'Make' },
@@ -46,56 +53,64 @@ class Cars extends Component {
       { name: 'Year' },
       { name: 'Actions' },
     ];
-    cars = cars.map((car) => {
-      const { id, title, vin, make, model, year } = car;
-      return {
-        cells: [
-          { data: title },
-          { data: vin },
-          { data: make },
-          { data: model },
-          { data: year },
-          { data: (
-              <div>
-                <Link to={`/edit/${id}`}>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    size="small"
-                    className={classNames(classes.mrgn5, className)}
-                  >
-                    Edit
-                  </Button>
-                </Link>
-                <Mutation
-                  mutation={DELETE_CAR_MUTATION}
-                  variables={{ id }}
-                >
-                  {deleteCarMutation => {
-                    return(
-                      <Button
-                        variant="contained"
-                        color="secondary"
-                        size="small"
-                        onClick={deleteCarMutation}
-                      >
-                        Delete
-                      </Button>
-                    );
-                  }}
-                </Mutation>
-              </div>
-            )
-          },
-        ],
-      }
-    });
 
     return(
-      <ReusableTable
-        headers={tableHeader}
-        rows={cars}
-      />
+      <Paper>
+        <Table>
+          <TableHead>
+            <TableRow>
+              {tableHeaders.map((header, i) => {
+                return(
+                  <TableCell key={`${header}-${i}`}>{header.name}</TableCell>
+                );
+              })}
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {cars.map((car, i) => {
+              const { id, title, vin, make, model, year } = car;
+              return(
+                <TableRow key={`${car}-${i}`}>
+                  <TableCell>{title}</TableCell>
+                  <TableCell>{vin}</TableCell>
+                  <TableCell>{make}</TableCell>
+                  <TableCell>{model}</TableCell>
+                  <TableCell>{year}</TableCell>
+                  <TableCell>
+                    <Link to={`/edit/${id}`}>
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        size="small"
+                        className={classNames(classes.mrgn5, className)}
+                      >
+                        Edit
+                      </Button>
+                    </Link>
+                    <Mutation
+                      mutation={DELETE_CAR_MUTATION}
+                      variables={{ id }}
+                    >
+                      {deleteCarMutation => {
+                        return(
+                          <Button
+                            variant="contained"
+                            color="secondary"
+                            size="small"
+                            onClick={deleteCarMutation}
+                          >
+                            Delete
+                          </Button>
+                        );
+                      }}
+                    </Mutation>
+                  </TableCell>
+                </TableRow>
+              );
+            })}
+          </TableBody>
+        </Table>
+      </Paper>
     );
   }
 }
