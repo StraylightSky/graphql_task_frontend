@@ -52,7 +52,7 @@ const validateVin = (vin) => {
   }
 
   const mod = sum % 11;
-  return mod === 10 ? vin.charAt(8) === 'x' : vin.charAt(8) == mod;
+  return mod === 10 ? vin.charAt(8) === 'x' : vin.charAt(8) === mod;
 }
 
 export default validateVin;
