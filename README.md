@@ -2,6 +2,9 @@ Graphql task frontend that consumes [backend API](https://github.com/StraylightS
 
 If you want to test the vin validation, I used [randomvin](http://randomvin.com/) to generate one.
 
+### Running the project
+Make sure that the backend API is up and running. Then just run the command `yarn start` in this project's root directory
+
 ### Tests
 Just run `yarn test`
 
